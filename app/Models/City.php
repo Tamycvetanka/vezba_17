@@ -20,4 +20,9 @@ class City extends Model
     {
         return $this->belongsToMany(User::class, 'user_cities')->withTimestamps();
     }
+
+    public function userWeathers()
+    {
+        return $this->hasMany(UserWeather::class);
+    }
 }
