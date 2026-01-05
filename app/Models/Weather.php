@@ -11,7 +11,10 @@ class Weather extends Model
 
     protected $table = 'weather';
 
-    protected $fillable = ['city_id', 'temperature'];
+    protected $fillable = [
+        'city_id',
+        'temperature',
+    ];
 
     public function city()
     {

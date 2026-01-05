@@ -11,9 +11,8 @@ class Forecast extends Model
 
     protected $fillable = [
         'city_id',
-        'date',
-        'weather_type',
         'temperature',
+        'date',
     ];
 
     protected $casts = [

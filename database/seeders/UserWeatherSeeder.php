@@ -18,18 +18,16 @@ class UserWeatherSeeder extends Seeder
             return;
         }
 
-        $city = City::where('name', 'Skopje')->first();
+        $city = City::first();
 
         if (!$city) {
             $this->command->error('Grad ne postoji – unos prekinut.');
             return;
         }
 
-        UserWeather::firstOrCreate(
-            [
-                'user_id' => $user->id,
-                'city_id' => $city->id
-            ]
-        );
+        UserWeather::firstOrCreate([
+            'user_id' => $user->id,
+            'city_id' => $city->id,
+        ]);
     }
 }

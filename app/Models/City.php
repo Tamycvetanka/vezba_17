@@ -16,13 +16,8 @@ class City extends Model
         return $this->hasMany(Forecast::class);
     }
 
-    public function users()
+    public function weather()
     {
-        return $this->belongsToMany(User::class, 'user_cities')->withTimestamps();
-    }
-
-    public function userWeathers()
-    {
-        return $this->hasMany(UserWeather::class);
+        return $this->hasOne(Weather::class);
     }
 }
