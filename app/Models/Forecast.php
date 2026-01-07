@@ -10,11 +10,16 @@ class Forecast extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['city_id', 'temperature', 'date'];
+    protected $fillable = [
+        'city_id',
+        'temperature',
+        'date',
+        'weather_type',
+    ];
 
     protected $casts = [
-        'date' => 'date',
         'temperature' => 'decimal:2',
+        'date' => 'date',
     ];
 
     public function city(): BelongsTo
