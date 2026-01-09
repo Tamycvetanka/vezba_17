@@ -2,24 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\City;
 use App\Models\User;
 
 class UserCityController extends Controller
 {
-    public function attach(City $city)
+    public function index()
     {
-        $user = User::findOrFail(1);
-        $user->cities()->syncWithoutDetaching([$city->id]);
+        $user = User::with([
+            'cities.weather',
+            'cities.forecasts' => fn ($q) => $q->orderBy('date'),
+        ])->findOrFail(1);
 
-        return redirect()->back();
-    }
-
-    public function detach(City $city)
-    {
-        $user = User::findOrFail(1);
-        $user->cities()->detach($city->id);
-
-        return redirect()->back();
+        return view('user.cities', compact('user'));
     }
 }

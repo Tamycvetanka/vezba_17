@@ -15,6 +15,7 @@ class Forecast extends Model
         'temperature',
         'date',
         'weather_type',
+        'icon',
     ];
 
     protected $casts = [
@@ -27,4 +28,3 @@ class Forecast extends Model
         return $this->belongsTo(City::class);
     }
 }
-

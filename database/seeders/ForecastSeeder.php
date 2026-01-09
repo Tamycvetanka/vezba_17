@@ -2,35 +2,62 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\City;
 use App\Models\Forecast;
+use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class ForecastSeeder extends Seeder
 {
     public function run(): void
     {
+        $types = [
+            'sunny' => ['min' => -30, 'max' => 45, 'icon' => '☀️'],
+            'cloudy' => ['min' => -30, 'max' => 15, 'icon' => '☁️'],
+            'rainy' => ['min' => -30, 'max' => -10, 'icon' => '🌧️'],
+            'snowy' => ['min' => -30, 'max' => 1, 'icon' => '❄️'],
+        ];
+
         $cities = City::all();
 
         foreach ($cities as $city) {
+            $lastTemp = null;
+            $start = Carbon::today();
 
-            $previousTemp = null;
+            for ($i = 0; $i < 5; $i++) {
+                $date = $start->copy()->addDays($i)->toDateString();
 
-            for ($i = 1; $i <= 5; $i++) {
+                if ($lastTemp === null) {
+                    $weatherType = array_rand($types);
+                    $min = $types[$weatherType]['min'];
+                    $max = $types[$weatherType]['max'];
+                    $temp = rand($min, $max);
+                } else {
+                    $windowMin = $lastTemp - 5;
+                    $windowMax = $lastTemp + 5;
 
-                $date = now()->addDays($i)->toDateString();
+                    $candidates = [];
+                    foreach ($types as $key => $rule) {
+                        $min = max($rule['min'], $windowMin);
+                        $max = min($rule['max'], $windowMax);
 
-                $weatherType = $this->randomWeatherType();
-                $temp = $this->randomTempForType($weatherType);
+                        if ($min <= $max) {
+                            $candidates[$key] = ['min' => $min, 'max' => $max];
+                        }
+                    }
 
+                    if (empty($candidates)) {
+                        $weatherType = 'sunny';
+                        $min = $windowMin;
+                        $max = $windowMax;
+                    } else {
+                        $keys = array_keys($candidates);
+                        $weatherType = $keys[array_rand($keys)];
+                        $min = $candidates[$weatherType]['min'];
+                        $max = $candidates[$weatherType]['max'];
+                    }
 
-                if ($previousTemp !== null) {
-                    $temp = max($previousTemp - 5, min($previousTemp + 5, $temp));
-                }
-
-
-                if ($city->name === 'Beograd') {
-                    $temp = max(10, min(20, $temp));
+                    $temp = rand($min, $max);
                 }
 
                 Forecast::updateOrCreate(
@@ -41,28 +68,12 @@ class ForecastSeeder extends Seeder
                     [
                         'weather_type' => $weatherType,
                         'temperature' => $temp,
+                        'icon' => $types[$weatherType]['icon'] ?? null,
                     ]
                 );
 
-                $previousTemp = $temp;
+                $lastTemp = $temp;
             }
         }
-    }
-
-    private function randomWeatherType(): string
-    {
-        return ['sunny', 'cloudy', 'rainy', 'snowy'][array_rand(['sunny', 'cloudy', 'rainy', 'snowy'])];
-    }
-
-    private function randomTempForType(string $type): float
-    {
-        $value = match ($type) {
-            'sunny'  => rand(150, 350) / 10,   // 15–35
-            'cloudy' => rand(0, 250) / 10,     // 0–25
-            'rainy'  => rand(-100, 150) / 10,  // -10–15
-            'snowy'  => rand(-10, 10) / 10,    // -1–1
-        };
-
-        return round($value, 1);
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Exercise12Controller;
 use App\Http\Controllers\Exercise13Controller;
 use App\Http\Controllers\Exercise14Controller;
 use App\Http\Controllers\Exercise15Controller;
+use App\Http\Controllers\ForecastController;
 use App\Models\City;
 
 Route::get('/', function () {
@@ -29,6 +30,7 @@ Route::get('/exercise-13', [Exercise13Controller::class, 'index'])->name('exerci
 Route::get('/exercise-14', [Exercise14Controller::class, 'index'])->name('exercise14.index');
 Route::post('/exercise-14', [Exercise14Controller::class, 'store'])->name('exercise14.store');
 
-/* ===== EXERCISE 15 ===== */
-Route::get('/exercise-15', [Exercise15Controller::class, 'index'])
-    ->name('exercise15.index');
+Route::get('/exercise-15', [Exercise15Controller::class, 'index'])->name('exercise15.index');
+
+
+Route::get('/forecast', [ForecastController::class, 'index'])->name('forecast.index');
