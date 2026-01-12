@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class City extends Model
 {
@@ -13,13 +11,18 @@ class City extends Model
 
     protected $fillable = ['name'];
 
-    public function forecasts(): HasMany
+    public function users()
     {
-        return $this->hasMany(Forecast::class);
+        return $this->belongsToMany(User::class, 'user_cities')->withTimestamps();
     }
 
-    public function weather(): HasOne
+    public function weather()
     {
-        return $this->hasOne(Weather::class);
+        return $this->hasOne(Weather::class, 'city_id');
+    }
+
+    public function forecasts()
+    {
+        return $this->hasMany(Forecast::class);
     }
 }

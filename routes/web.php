@@ -8,6 +8,7 @@ use App\Http\Controllers\Exercise13Controller;
 use App\Http\Controllers\Exercise14Controller;
 use App\Http\Controllers\Exercise15Controller;
 use App\Http\Controllers\ForecastController;
+use App\Http\Controllers\WeatherHomeController;
 use App\Models\City;
 
 Route::get('/', function () {
@@ -20,17 +21,29 @@ Route::post('/weather', [WeatherApiController::class, 'search'])->name('weather.
 Route::get('/user-weathers', [UserWeatherController::class, 'index'])->name('user.weathers');
 
 Route::get('/exercise-12', function () {
-    return City::with('forecasts', 'weather')->take(3)->get();
+    return City::with(['forecasts', 'weather'])->take(3)->get();
 });
 
-Route::get('/exercise-12-view', [Exercise12Controller::class, 'index'])->name('exercise12.view');
+Route::get('/exercise-12-view', [Exercise12Controller::class, 'index'])
+    ->name('exercise12.view');
 
-Route::get('/exercise-13', [Exercise13Controller::class, 'index'])->name('exercise13.index');
+Route::get('/exercise-13', [Exercise13Controller::class, 'index'])
+    ->name('exercise13.index');
 
-Route::get('/exercise-14', [Exercise14Controller::class, 'index'])->name('exercise14.index');
-Route::post('/exercise-14', [Exercise14Controller::class, 'store'])->name('exercise14.store');
+Route::get('/exercise-14', [Exercise14Controller::class, 'index'])
+    ->name('exercise14.index');
 
-Route::get('/exercise-15', [Exercise15Controller::class, 'index'])->name('exercise15.index');
+Route::post('/exercise-14', [Exercise14Controller::class, 'store'])
+    ->name('exercise14.store');
 
+Route::get('/exercise-15', [Exercise15Controller::class, 'index'])
+    ->name('exercise15.index');
 
-Route::get('/forecast', [ForecastController::class, 'index'])->name('forecast.index');
+Route::get('/forecast', [ForecastController::class, 'index'])
+    ->name('forecast.index');
+
+Route::get('/exercise-17', [WeatherHomeController::class, 'index'])
+    ->name('exercise17.index');
+
+Route::delete('/exercise-17/favourites/{city}', [WeatherHomeController::class, 'destroyFavourite'])
+    ->name('exercise17.favourites.destroy');
